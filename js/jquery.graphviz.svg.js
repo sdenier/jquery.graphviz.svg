@@ -221,7 +221,7 @@
         var htmlDecode = function (input) {
           var e = document.createElement('div')
           e.innerHTML = input
-          return e.childNodes[0].nodeValue
+          return e.childNodes > 0 ? e.childNodes[0].nodeValue : "N/A"
         }
         var value = htmlDecode(previousSibling.nodeValue.trim())
         if (value != title) {
