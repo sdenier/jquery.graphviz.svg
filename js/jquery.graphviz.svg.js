@@ -345,7 +345,7 @@
     return retval
   }
 
-  GraphvizSvg.prototype.findLinked = function (node, includeEdges, testEdge, $retval) {
+  GraphvizSvg.prototype.findLinked = function (node, includeEdges, testEdge, $retval, followLinks = true) {
     var that = this
     var $node = $(node)
     var $edges = null
@@ -357,7 +357,9 @@
       var n = this._nodesByName[names[i]]
       if (!$retval.is(n)) {
         $retval.push(n)
-        that.findLinked(n, includeEdges, testEdge, $retval)
+        if (followLinks) {
+          that.findLinked(n, includeEdges, testEdge, $retval, followLinks)
+        }
       }
     }
   }
@@ -407,7 +409,7 @@
     return this._edgesByName
   }
 
-  GraphvizSvg.prototype.linkedTo = function (node, includeEdges) {
+  GraphvizSvg.prototype.linkedTo = function (node, includeEdges, followLinks) {
     var $retval = $()
     this.findLinked(node, includeEdges, function (nodeName, edgeName) {
       var other = null;
@@ -416,11 +418,11 @@
         other = edgeName.substring(0, edgeName.length - match.length);
       }
       return other;
-    }, $retval)
+    }, $retval, followLinks)
     return $retval
   }
 
-  GraphvizSvg.prototype.linkedFrom = function (node, includeEdges) {
+  GraphvizSvg.prototype.linkedFrom = function (node, includeEdges, followLinks) {
     var $retval = $()
     this.findLinked(node, includeEdges, function (nodeName, edgeName) {
       var other = null;
@@ -429,7 +431,7 @@
         other = edgeName.substring(match.length);
       }
       return other;
-    }, $retval)
+    }, $retval, followLinks)
     return $retval
   }
 
@@ -437,10 +439,10 @@
     var $retval = $()
     this.findLinked(node, includeEdges, function (nodeName, edgeName) {
       return '^' + name + '--(.*)$'
-    }, $retval)
+    }, $retval, followLinks)
     this.findLinked(node, includeEdges, function (nodeName, edgeName) {
       return '^(.*)--' + name + '$'
-    }, $retval)
+    }, $retval, followLinks)
     return $retval
   }
 

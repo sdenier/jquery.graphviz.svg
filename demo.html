@@ -52,11 +52,12 @@
                     url: graphurl,
                     ready: function() {
                         var gv = this
-                        gv.nodes().click(function () {
+                        gv.nodes().click(function (event) {
+                            var followLinks = ! event.ctrlKey
                             var $set = $()
                             $set.push(this)
-                            $set = $set.add(gv.linkedFrom(this, true))
-                            $set = $set.add(gv.linkedTo(this, true))
+                            $set = $set.add(gv.linkedFrom(this, true, followLinks))
+                            $set = $set.add(gv.linkedTo(this, true, followLinks))
                             gv.highlight($set, true)
                             gv.bringToFront($set)
                         })
